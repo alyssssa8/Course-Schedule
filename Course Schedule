@@ -1,0 +1,37 @@
+class Solution {
+private:
+  vector<vector<int>>newVectorStore;  
+public:
+    bool canFinish(int numCourses,  vector<vector<int>>& prerequisites) {
+        
+        newVectorStore = vector<vector<int>>(numCourses);
+        for (int i = 0; i < prerequisites.size(); i++){
+            newVectorStore[prerequisites[i][0]].push_back(prerequisites[i][1]);
+        }
+        vector<int>valueStatus(numCourses);
+        for (int i = 0; i <numCourses; i++){
+            if(dfs(i, valueStatus) == true){
+                return false;
+            }
+        }
+        return true;
+    }
+    bool dfs(int i, vector<int> & valueStatus){//old
+        if (valueStatus[i] == 1){//visiting cycle
+            return true;
+        }
+        if (valueStatus[i] == 2){ //visited
+            return false;
+        }
+        else{
+            valueStatus[i] = 1;
+            for (int j = 0; j <newVectorStore[i].size(); j++){
+                if (dfs(newVectorStore[i][j], valueStatus) == true){// cycle
+                    return true;
+                }
+            }
+        }
+        valueStatus[i] = 2; //visted
+        return false;    
+    }
+};
